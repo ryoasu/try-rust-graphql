@@ -1,0 +1,20 @@
+version: "3.9"
+services:
+  db:
+    image: "mysql:8"
+    volumes:
+      - ".docker/mysql:/docker-entrypoint-initdb.d"
+      - ".docker/data/mysql:/var/lib/mysql"
+    ports:
+      - 13306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+  app:
+    image: "rust:1.51.0-slim-buster"
+    working_dir: /app
+    volumes:
+      - ./target/x86_64-unknown-linux-gnu/debug:/app
+    command: ./try-rust-graphql
+    ports:
+      - 8080:8080
